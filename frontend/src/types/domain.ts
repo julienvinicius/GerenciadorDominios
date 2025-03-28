@@ -7,6 +7,7 @@ export interface Domain {
   notes?: string;
   createdAt: string;
   updatedAt: string;
+  dnsRecords: DnsRecord[];
 }
 
 export interface DNSRecord {
@@ -71,4 +72,12 @@ export interface Session {
   ip: string;
   lastActive: string;
   createdAt: string;
+}
+
+export interface DnsRecord {
+  id: string;
+  type: string;
+  name: string;
+  content: string;
+  ttl: number;
 } 

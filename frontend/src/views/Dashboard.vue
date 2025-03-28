@@ -186,7 +186,7 @@ const expiringDomains = computed(() => {
                   </button>
                   <button
                     class="text-red-600 hover:text-red-900"
-                    @click="domainStore.deleteDomain(domain.id)"
+                    @click="domainStore.deleteDomain(Number(domain.id))"
                   >
                     Excluir
                   </button>

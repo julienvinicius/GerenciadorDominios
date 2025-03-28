@@ -36,7 +36,7 @@ const handleSave = async () => {
   if (!domain.value) return
   
   try {
-    await domainStore.updateDomain(domain.value.id, formData.value)
+    await domainStore.updateDomain(Number(domain.value.id), formData.value)
     isEditing.value = false
   } catch (error) {
     console.error('Erro ao atualizar domínio:', error)
@@ -48,7 +48,7 @@ const handleDelete = async () => {
   
   if (confirm('Tem certeza que deseja excluir este domínio?')) {
     try {
-      await domainStore.deleteDomain(domain.value.id)
+      await domainStore.deleteDomain(Number(domain.value.id))
       router.push('/domains')
     } catch (error) {
       console.error('Erro ao excluir domínio:', error)
