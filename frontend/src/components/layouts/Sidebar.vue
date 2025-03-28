@@ -65,6 +65,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-// Não é necessário nenhuma lógica aqui
+<script setup lang="ts">  
+
 </script> 
