@@ -13,11 +13,15 @@ const isLoading = ref(false)
 const isAddingRecord = ref(false)
 
 const newRecord = ref<DNSRecord>({
+  id: '',
+  domainId: domainId,
   type: 'A',
   name: '',
   content: '',
   ttl: 3600,
-  priority: 0
+  priority: 0,
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString()
 })
 
 const recordTypes = [
@@ -46,11 +50,15 @@ const handleAddRecord = async () => {
     await loadRecords()
     isAddingRecord.value = false
     newRecord.value = {
+      id: '',
+      domainId: domainId,
       type: 'A',
       name: '',
       content: '',
       ttl: 3600,
-      priority: 0
+      priority: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     }
   } catch (error) {
     console.error('Erro ao adicionar registro DNS:', error)

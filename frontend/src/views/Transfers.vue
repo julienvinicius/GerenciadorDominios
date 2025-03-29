@@ -2,27 +2,34 @@
 import { ref, onMounted } from 'vue'
 import { useDomainStore } from '@/stores/domain'
 import type { DomainTransfer } from '@/types/domain'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const domainStore = useDomainStore()
+
+const domainId = route.params.id as string
 
 const transfers = ref<DomainTransfer[]>([])
 const isLoading = ref(false)
 const isAddingTransfer = ref(false)
 
 const newTransfer = ref<DomainTransfer>({
+  id: '',
   domainId: '',
   fromRegistrar: '',
   toRegistrar: '',
   status: 'pending',
   startDate: new Date().toISOString().split('T')[0],
   estimatedCompletionDate: '',
-  notes: ''
+  notes: '',
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString()
 })
 
 const loadTransfers = async () => {
   isLoading.value = true
   try {
-    transfers.value = await domainStore.getDomainTransfers()
+    transfers.value = await domainStore.getDomainTransfers(domainId)
   } catch (error) {
     console.error('Erro ao carregar transferências:', error)
   } finally {
@@ -36,13 +43,16 @@ const handleAddTransfer = async () => {
     await loadTransfers()
     isAddingTransfer.value = false
     newTransfer.value = {
+      id: '',
       domainId: '',
       fromRegistrar: '',
       toRegistrar: '',
       status: 'pending',
       startDate: new Date().toISOString().split('T')[0],
       estimatedCompletionDate: '',
-      notes: ''
+      notes: '',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     }
   } catch (error) {
     console.error('Erro ao criar transferência:', error)
@@ -53,7 +63,7 @@ const handleCancelTransfer = async (transferId: string) => {
   if (!confirm('Tem certeza que deseja cancelar esta transferência?')) return
 
   try {
-    await domainStore.cancelDomainTransfer(transferId)
+    await domainStore.cancelDomainTransfer(domainId, transferId)
     await loadTransfers()
   } catch (error) {
     console.error('Erro ao cancelar transferência:', error)

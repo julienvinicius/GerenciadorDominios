@@ -99,7 +99,7 @@ const expiringDomains = computed(() => {
               <dl>
                 <dt class="text-sm font-medium text-gray-500 truncate">Domínios Ativos</dt>
                 <dd class="flex items-baseline">
-                  <div class="text-2xl font-semibold text-gray-900">{{ domainStore.getActiveDomains.length }}</div>
+                  <div class="text-2xl font-semibold text-gray-900">{{ domainStore.getActiveDomains }}</div>
                 </dd>
               </dl>
             </div>
@@ -186,7 +186,7 @@ const expiringDomains = computed(() => {
                   </button>
                   <button
                     class="text-red-600 hover:text-red-900"
-                    @click="domainStore.deleteDomain(Number(domain.id))"
+                    @click="domainStore.deleteDomain(domain.id.toString())"
                   >
                     Excluir
                   </button>

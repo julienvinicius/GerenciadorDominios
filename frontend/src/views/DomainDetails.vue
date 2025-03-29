@@ -17,7 +17,7 @@ const formData = ref<DomainFormData>({
 })
 
 onMounted(async () => {
-  const domainId = Number(route.params.id)
+  const domainId = route.params.id.toString()
   const foundDomain = domainStore.getDomainById(domainId)
   if (foundDomain) {
     domain.value = foundDomain
@@ -36,7 +36,7 @@ const handleSave = async () => {
   if (!domain.value) return
   
   try {
-    await domainStore.updateDomain(Number(domain.value.id), formData.value)
+    await domainStore.updateDomain(domain.value.id.toString(), formData.value)
     isEditing.value = false
   } catch (error) {
     console.error('Erro ao atualizar domínio:', error)
@@ -48,7 +48,7 @@ const handleDelete = async () => {
   
   if (confirm('Tem certeza que deseja excluir este domínio?')) {
     try {
-      await domainStore.deleteDomain(Number(domain.value.id))
+      await domainStore.deleteDomain(domain.value.id.toString())
       router.push('/domains')
     } catch (error) {
       console.error('Erro ao excluir domínio:', error)
