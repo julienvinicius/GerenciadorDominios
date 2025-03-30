@@ -1,108 +1,82 @@
 <template>
-  <div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl shadow-lg max-w-md w-full">
-      <div class="p-6">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-xl font-semibold text-gray-900">
-            {{ isEditing ? 'Editar Registrador' : 'Novo Registrador' }}
-          </h2>
-          <button @click="$emit('close')" class="text-gray-400 hover:text-gray-500">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+  <div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-lg">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">
+          {{ props.registrar ? 'Editar Registrador' : 'Novo Registrador' }}
+        </h3>
+      </div>
+
+      <form @submit.prevent="handleSubmit" class="p-6 space-y-4">
+        <!-- Nome -->
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700">Nome</label>
+          <input
+            type="text"
+            id="name"
+            v-model="formData.name"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            :class="{ 'border-red-300': errors.name }"
+          />
+          <p v-if="errors.name" class="mt-2 text-sm text-red-600">{{ errors.name }}</p>
         </div>
 
-        <form @submit.prevent="handleSubmit" class="space-y-6">
-          <div>
-            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nome do Registrador</label>
-            <input
-              type="text"
-              id="name"
-              v-model="form.name"
-              class="input-field"
-              placeholder="Ex: Registro.br"
-              required
-            />
-          </div>
+        <!-- URL da API -->
+        <div>
+          <label for="apiUrl" class="block text-sm font-medium text-gray-700">URL da API</label>
+          <input
+            type="text"
+            id="apiUrl"
+            v-model="formData.apiUrl"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            :class="{ 'border-red-300': errors.apiUrl }"
+          />
+          <p v-if="errors.apiUrl" class="mt-2 text-sm text-red-600">{{ errors.apiUrl }}</p>
+        </div>
 
-          <div>
-            <label for="apiUrl" class="block text-sm font-medium text-gray-700 mb-1">URL da API</label>
-            <input
-              type="url"
-              id="apiUrl"
-              v-model="form.apiUrl"
-              class="input-field"
-              placeholder="https://api.exemplo.com"
-              required
-            />
-          </div>
+        <!-- Chave da API -->
+        <div>
+          <label for="apiKey" class="block text-sm font-medium text-gray-700">Chave da API</label>
+          <input
+            type="password"
+            id="apiKey"
+            v-model="formData.apiKey"
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            :class="{ 'border-red-300': errors.apiKey }"
+          />
+          <p v-if="errors.apiKey" class="mt-2 text-sm text-red-600">{{ errors.apiKey }}</p>
+        </div>
 
-          <div>
-            <label for="apiKey" class="block text-sm font-medium text-gray-700 mb-1">Chave da API</label>
-            <input
-              type="password"
-              id="apiKey"
-              v-model="form.apiKey"
-              class="input-field"
-              placeholder="••••••••"
-              required
-            />
-          </div>
-
-          <div>
-            <label for="apiSecret" class="block text-sm font-medium text-gray-700 mb-1">Segredo da API</label>
-            <input
-              type="password"
-              id="apiSecret"
-              v-model="form.apiSecret"
-              class="input-field"
-              placeholder="••••••••"
-              required
-            />
-          </div>
-
-          <div>
-            <label for="testConnection" class="block text-sm font-medium text-gray-700 mb-1">Testar Conexão</label>
-            <button
-              type="button"
-              @click="testConnection"
-              class="btn-secondary w-full"
-              :disabled="testing"
-            >
-              {{ testing ? 'Testando...' : 'Testar Conexão' }}
-            </button>
-            <p v-if="testResult" :class="[
-              testResult.success ? 'text-green-600' : 'text-red-600',
-              'mt-2 text-sm'
-            ]">
-              {{ testResult.message }}
-            </p>
-          </div>
-
-          <div class="flex justify-end space-x-4">
-            <button type="button" @click="$emit('close')" class="btn-secondary">
-              Cancelar
-            </button>
-            <button type="submit" class="btn-primary">
-              {{ isEditing ? 'Salvar Alterações' : 'Adicionar Registrador' }}
-            </button>
-          </div>
-        </form>
-      </div>
+        <!-- Botões -->
+        <div class="mt-6 flex justify-end space-x-3">
+          <button
+            type="button"
+            class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            @click="emit('close')"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            {{ props.registrar ? 'Salvar' : 'Adicionar' }}
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
 const props = defineProps<{
   registrar?: {
     id: number
     name: string
     apiUrl: string
-    status: string
+    apiKey?: string
   }
 }>()
 
@@ -111,52 +85,39 @@ const emit = defineEmits<{
   (e: 'submit', data: any): void
 }>()
 
-const isEditing = !!props.registrar
-const testing = ref(false)
-const testResult = ref<{ success: boolean; message: string } | null>(null)
-
-const form = ref({
-  name: '',
-  apiUrl: '',
-  apiKey: '',
-  apiSecret: ''
+const formData = ref({
+  name: props.registrar?.name || '',
+  apiUrl: props.registrar?.apiUrl || '',
+  apiKey: props.registrar?.apiKey || ''
 })
 
-onMounted(() => {
-  if (props.registrar) {
-    form.value = {
-      name: props.registrar.name,
-      apiUrl: props.registrar.apiUrl,
-      apiKey: '',
-      apiSecret: ''
-    }
-  }
-})
+const errors = ref<Record<string, string>>({})
 
-const testConnection = async () => {
-  testing.value = true
-  testResult.value = null
-  
-  try {
-    // Simular teste de conexão
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    testResult.value = {
-      success: true,
-      message: 'Conexão estabelecida com sucesso!'
-    }
-  } catch (error) {
-    testResult.value = {
-      success: false,
-      message: 'Erro ao conectar com a API'
-    }
-  } finally {
-    testing.value = false
+const validateForm = () => {
+  errors.value = {}
+
+  if (!formData.value.name) {
+    errors.value.name = 'O nome é obrigatório'
   }
+
+  if (!formData.value.apiUrl) {
+    errors.value.apiUrl = 'A URL da API é obrigatória'
+  } else if (!/^https?:\/\/.+/.test(formData.value.apiUrl)) {
+    errors.value.apiUrl = 'URL da API inválida'
+  }
+
+  if (!formData.value.apiKey) {
+    errors.value.apiKey = 'A chave da API é obrigatória'
+  }
+
+  return Object.keys(errors.value).length === 0
 }
 
 const handleSubmit = () => {
+  if (!validateForm()) return
+
   emit('submit', {
-    ...form.value,
+    ...formData.value,
     id: props.registrar?.id
   })
 }

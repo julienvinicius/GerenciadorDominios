@@ -1,7 +1,13 @@
 import axios from 'axios'
 
 const api = axios.create({
-    baseURL: '/api'
+    baseURL: '/api',
+    withCredentials: true,
+    headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    }
 })
 
 // Interceptor para logs de requisição

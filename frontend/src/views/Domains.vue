@@ -8,38 +8,44 @@ const searchQuery = ref('')
 const statusFilter = ref<Domain['status'] | 'all'>('all')
 const sortBy = ref<'name' | 'expirationDate' | 'status'>('name')
 const sortOrder = ref<'asc' | 'desc'>('asc')
+const loading = ref(true)
 
 onMounted(async () => {
-  await domainStore.fetchDomains()
+  try {
+    await domainStore.fetchDomains()
+  } finally {
+    loading.value = false
+  }
 })
 
 const filteredDomains = computed(() => {
-  let domains = [...domainStore.domains]
+  let domains = [...(domainStore.domains || [])]
 
   // Aplicar filtro de busca
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     domains = domains.filter(domain => 
-      domain.name.toLowerCase().includes(query) ||
-      domain.registrar.toLowerCase().includes(query)
+      domain?.name?.toLowerCase().includes(query) ||
+      domain?.registrar?.toLowerCase().includes(query)
     )
   }
 
   // Aplicar filtro de status
   if (statusFilter.value !== 'all') {
-    domains = domains.filter(domain => domain.status === statusFilter.value)
+    domains = domains.filter(domain => domain?.status === statusFilter.value)
   }
 
   // Aplicar ordenação
   domains.sort((a, b) => {
+    if (!a || !b) return 0
     const multiplier = sortOrder.value === 'asc' ? 1 : -1
     switch (sortBy.value) {
       case 'name':
-        return multiplier * a.name.localeCompare(b.name)
+        return multiplier * (a.name || '').localeCompare(b.name || '')
       case 'expirationDate':
-        return multiplier * (new Date(a.expirationDate).getTime() - new Date(b.expirationDate).getTime())
+        return multiplier * (new Date(a.expirationDate || '').getTime() - new Date(b.expirationDate || '').getTime())
       case 'status':
-        return multiplier * a.status.localeCompare(b.status)
+        return multiplier * (a.status || '').localeCompare(b.status || '')
       default:
         return 0
     }
@@ -55,7 +61,7 @@ const getStatusColor = (status: Domain['status']): string => {
     pending: 'bg-yellow-100 text-yellow-800',
     expired: 'bg-gray-100 text-gray-800'
   }
-  return colors[status]
+  return colors[status] || 'bg-gray-100 text-gray-800'
 }
 
 const getStatusText = (status: Domain['status']): string => {
@@ -65,10 +71,11 @@ const getStatusText = (status: Domain['status']): string => {
     pending: 'Pendente',
     expired: 'Expirado'
   }
-  return texts[status]
+  return texts[status] || 'Desconhecido'
 }
 
 const getDaysUntilExpiration = (expirationDate: string): number => {
+  if (!expirationDate) return 0
   const today = new Date()
   const expiration = new Date(expirationDate)
   const diffTime = expiration.getTime() - today.getTime()
@@ -176,7 +183,14 @@ const getDaysUntilExpiration = (expirationDate: string): number => {
         </h2>
       </div>
       <div class="border-t border-gray-200">
-        <ul role="list" class="divide-y divide-gray-200">
+        <!-- Loading -->
+        <div v-if="loading" class="p-4 text-center">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+          <p class="mt-2 text-sm text-gray-500">Carregando domínios...</p>
+        </div>
+
+        <!-- Lista -->
+        <ul v-else role="list" class="divide-y divide-gray-200">
           <li v-for="domain in filteredDomains" :key="domain.id" class="px-4 py-4 sm:px-6">
             <div class="flex items-center justify-between">
               <div class="flex items-center">
@@ -199,22 +213,21 @@ const getDaysUntilExpiration = (expirationDate: string): number => {
                 </div>
                 <div class="flex space-x-2">
                   <button
-                    class="text-blue-600 hover:text-blue-900"
                     @click="$router.push(`/domains/${domain.id}`)"
+                    class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
                     Detalhes
-                  </button>
-                  <button
-                    class="text-red-600 hover:text-red-900"
-                    @click="domainStore.deleteDomain(domain.id.toString())"
-                  >
-                    Excluir
                   </button>
                 </div>
               </div>
             </div>
           </li>
         </ul>
+
+        <!-- Sem resultados -->
+        <div v-if="!loading && filteredDomains.length === 0" class="p-4 text-center">
+          <p class="text-sm text-gray-500">Nenhum domínio encontrado</p>
+        </div>
       </div>
     </div>
   </div>
