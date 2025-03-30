@@ -101,8 +101,8 @@
             </svg>
           </div>
           <div class="ml-3">
-            <p class="text-sm font-medium text-gray-700">{{ authStore.user?.name || 'Usuário' }}</p>
-            <p class="text-xs text-gray-500">{{ authStore.user?.email || 'Não logado' }}</p>
+            <p class="text-sm font-medium text-gray-700">Usuário</p>
+            <p class="text-xs text-gray-500">Sistema de Gerenciamento</p>
           </div>
         </div>
       </div>
@@ -111,7 +111,4 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/auth'
-
-const authStore = useAuthStore()
 </script> 

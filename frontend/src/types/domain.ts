@@ -1,13 +1,18 @@
+import type { Registrar } from './registrar'
+
 export interface Domain {
   id: string;
   name: string;
-  registrar: string;
-  status: 'active' | 'inactive' | 'pending' | 'expired';
-  expirationDate: string;
+  status: 'active' | 'expired' | 'expiring' | 'pending';
+  registrar_id: string;
+  registrar?: Registrar;
+  expiry_date: string;
+  created_at: string;
+  updated_at: string;
+  expiration_date: string;
+  auto_renew: boolean;
   notes?: string;
-  createdAt: string;
-  updatedAt: string;
-  dnsRecords: DnsRecord[];
+  dnsRecords?: DnsRecord[];
 }
 
 export interface DNSRecord {
@@ -24,9 +29,9 @@ export interface DNSRecord {
 
 export interface DomainFormData {
   name: string;
-  registrar: string;
-  expirationDate: string;
-  notes?: string;
+  registrar_id: string;
+  status: Domain['status'];
+  expiration_date: string;
 }
 
 export interface DomainState {
@@ -47,6 +52,17 @@ export interface DomainTransfer {
   notes?: string;
   createdAt: string;
   updatedAt: string;
+  error?: string;
+  progress?: number;
+  authCode?: string;
+  transferCost?: number;
+  transferFee?: number;
+  transferStatus?: {
+    step: number;
+    description: string;
+    completed: boolean;
+    error?: string;
+  }[];
 }
 
 export interface SecuritySettings {
@@ -75,7 +91,7 @@ export interface Session {
 }
 
 export interface DnsRecord {
-  id: string;
+  id: number;
   type: string;
   name: string;
   content: string;

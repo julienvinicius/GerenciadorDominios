@@ -1,58 +1,48 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-      <div>
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Faça login em sua conta
-        </h2>
-      </div>
-      <form class="mt-8 space-y-6" @submit.prevent="handleLogin">
-        <div class="rounded-md shadow-sm -space-y-px">
-          <div>
-            <label for="email" class="sr-only">Email</label>
-            <input
-              id="email"
-              v-model="email"
-              name="email"
-              type="email"
-              required
-              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-              placeholder="Email"
-            />
-          </div>
-          <div>
-            <label for="password" class="sr-only">Senha</label>
-            <input
-              id="password"
-              v-model="password"
-              name="password"
-              type="password"
-              required
-              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-              placeholder="Senha"
-            />
-          </div>
+  <div class="login-view">
+    <div class="login-card">
+      <h1>Login</h1>
+      
+      <form @submit.prevent="handleSubmit" class="login-form">
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input
+            type="email"
+            id="email"
+            v-model="email"
+            required
+            placeholder="Seu e-mail"
+            class="form-input"
+          />
         </div>
 
-        <div v-if="error" class="text-red-600 text-sm text-center">
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <input
+            type="password"
+            id="password"
+            v-model="password"
+            required
+            placeholder="Sua senha"
+            class="form-input"
+          />
+        </div>
+
+        <div v-if="error" class="error-message">
           {{ error }}
         </div>
 
-        <div>
-          <button
-            type="submit"
-            :disabled="loading"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            <span v-if="loading" class="absolute left-0 inset-y-0 flex items-center pl-3">
-              <!-- Spinner -->
-              <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-            </span>
-            {{ loading ? 'Entrando...' : 'Entrar' }}
-          </button>
+        <button type="submit" class="btn-primary" :disabled="isLoading">
+          {{ isLoading ? 'Entrando...' : 'Entrar' }}
+        </button>
+
+        <div class="form-footer">
+          <router-link to="/register" class="link">
+            Não tem uma conta? Registre-se
+          </router-link>
+          <router-link to="/forgot-password" class="link">
+            Esqueceu sua senha?
+          </router-link>
         </div>
       </form>
     </div>
@@ -61,30 +51,131 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
-const route = useRoute()
 const authStore = useAuthStore()
 
 const email = ref('')
 const password = ref('')
-const error = ref('')
-const loading = ref(false)
+const error = ref<string | null>(null)
+const isLoading = ref(false)
 
-const handleLogin = async () => {
-  loading.value = true
-  error.value = ''
-
+const handleSubmit = async () => {
   try {
-    await authStore.login(email.value, password.value)
-    const redirectPath = route.query.redirect as string || '/'
-    router.push(redirectPath)
-  } catch (err: any) {
-    error.value = err.response?.data?.message || 'Erro ao fazer login'
+    isLoading.value = true
+    error.value = null
+    await authStore.login({
+      email: email.value,
+      password: password.value
+    })
+    router.push('/domains')
+  } catch (err) {
+    error.value = 'E-mail ou senha inválidos'
+    console.error('Erro ao fazer login:', err)
   } finally {
-    loading.value = false
+    isLoading.value = false
   }
 }
-</script> 
+</script>
+
+<style scoped>
+.login-view {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  padding: 1rem;
+}
+
+.login-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-card h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #666;
+}
+
+.form-input {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #1867c0;
+}
+
+.btn-primary {
+  padding: 0.75rem;
+  background: #1867c0;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #1756a9;
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #f44336;
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+.form-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.link {
+  color: #1867c0;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+</style> 
