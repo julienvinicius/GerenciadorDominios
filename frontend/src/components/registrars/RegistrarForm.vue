@@ -1,13 +1,13 @@
 <template>
-  <div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
+  <div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
     <div class="bg-white rounded-lg shadow-xl w-full max-w-lg">
-      <div class="px-6 py-4 border-b border-gray-200">
-        <h3 class="text-lg font-medium text-gray-900">
+      <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+        <h3 class="text-base sm:text-lg font-medium text-gray-900">
           {{ props.registrar ? 'Editar Registrador' : 'Novo Registrador' }}
         </h3>
       </div>
 
-      <form @submit.prevent="handleSubmit" class="p-6 space-y-4">
+      <form @submit.prevent="handleSubmit" class="p-4 sm:p-6 space-y-3 sm:space-y-4">
         <!-- Nome -->
         <div>
           <label for="name" class="block text-sm font-medium text-gray-700">Nome</label>
@@ -18,7 +18,7 @@
             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             :class="{ 'border-red-300': errors.name }"
           />
-          <p v-if="errors.name" class="mt-2 text-sm text-red-600">{{ errors.name }}</p>
+          <p v-if="errors.name" class="mt-1 sm:mt-2 text-sm text-red-600">{{ errors.name }}</p>
         </div>
 
         <!-- URL da API -->
@@ -31,7 +31,7 @@
             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             :class="{ 'border-red-300': errors.apiUrl }"
           />
-          <p v-if="errors.apiUrl" class="mt-2 text-sm text-red-600">{{ errors.apiUrl }}</p>
+          <p v-if="errors.apiUrl" class="mt-1 sm:mt-2 text-sm text-red-600">{{ errors.apiUrl }}</p>
         </div>
 
         <!-- Chave da API -->
@@ -44,21 +44,21 @@
             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             :class="{ 'border-red-300': errors.apiKey }"
           />
-          <p v-if="errors.apiKey" class="mt-2 text-sm text-red-600">{{ errors.apiKey }}</p>
+          <p v-if="errors.apiKey" class="mt-1 sm:mt-2 text-sm text-red-600">{{ errors.apiKey }}</p>
         </div>
 
         <!-- Botões -->
-        <div class="mt-6 flex justify-end space-x-3">
+        <div class="mt-4 sm:mt-6 flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
           <button
             type="button"
-            class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             @click="emit('close')"
           >
             Cancelar
           </button>
           <button
             type="submit"
-            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             {{ props.registrar ? 'Salvar' : 'Adicionar' }}
           </button>

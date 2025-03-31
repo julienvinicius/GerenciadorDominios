@@ -26,13 +26,13 @@
             </svg>
           </div>
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+            <h3 class="text-base sm:text-lg leading-6 font-medium text-gray-900" id="modal-title">
               Adicionar Novo Domínio
             </h3>
-            <div class="mt-6">
-              <form @submit.prevent="handleSubmit">
+            <div class="mt-4 sm:mt-6">
+              <form @submit.prevent="handleSubmit" class="space-y-4 sm:space-y-6">
                 <!-- Nome do Domínio -->
-                <div class="mb-4">
+                <div>
                   <label for="domain-name" class="block text-sm font-medium text-gray-700">Nome do Domínio</label>
                   <input
                     type="text"
@@ -52,7 +52,7 @@
                 </div>
 
                 <!-- Registrador -->
-                <div class="mb-4">
+                <div>
                   <label for="registrar" class="block text-sm font-medium text-gray-700">Registrador</label>
                   <select
                     id="registrar"
@@ -68,7 +68,7 @@
                 </div>
 
                 <!-- Data de Expiração -->
-                <div class="mb-4">
+                <div>
                   <label for="expiry-date" class="block text-sm font-medium text-gray-700">Data de Expiração</label>
                   <input
                     type="date"
@@ -80,13 +80,13 @@
                 </div>
 
                 <!-- Botões -->
-                <div class="mt-6 sm:flex sm:flex-row-reverse">
+                <div class="mt-6 flex flex-col sm:flex-row-reverse space-y-2 sm:space-y-0 sm:space-x-3">
                   <button
                     type="submit"
-                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    class="w-full sm:w-auto inline-flex justify-center items-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm"
                     :disabled="isLoading"
                   >
-                    <svg v-if="isLoading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <svg v-if="isLoading" class="animate-spin -ml-1 mr-2 h-4 w-4 sm:h-5 sm:w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                       <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
@@ -94,7 +94,7 @@
                   </button>
                   <button
                     type="button"
-                    class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:w-auto sm:text-sm"
+                    class="w-full sm:w-auto inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm"
                     @click="$emit('update:modelValue', false)"
                     :disabled="isLoading"
                   >

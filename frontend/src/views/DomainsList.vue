@@ -28,7 +28,7 @@ const filteredDomains = computed(() => {
     const query = searchQuery.value.toLowerCase()
     domains = domains.filter(domain => 
       domain?.name?.toLowerCase().includes(query) ||
-      domain?.registrarId?.toLowerCase().includes(query)
+      domain?.registrar_id?.toLowerCase().includes(query)
     )
   }
 
@@ -45,7 +45,7 @@ const filteredDomains = computed(() => {
       case 'name':
         return multiplier * (a.name || '').localeCompare(b.name || '')
       case 'expirationDate':
-        return multiplier * (new Date(a.expirationDate || '').getTime() - new Date(b.expirationDate || '').getTime())
+        return multiplier * (new Date(a.expiration_date || '').getTime() - new Date(b.expiration_date || '').getTime())
       case 'status':
         return multiplier * (a.status || '').localeCompare(b.status || '')
       default:
@@ -76,10 +76,10 @@ const getStatusText = (status: Domain['status']): string => {
   return texts[status] || 'Desconhecido'
 }
 
-const getDaysUntilExpiration = (expirationDate: string): number => {
-  if (!expirationDate) return 0
+const getDaysUntilExpiration = (expiration_date: string): number => {
+  if (!expiration_date) return 0
   const today = new Date()
-  const expiration = new Date(expirationDate)
+  const expiration = new Date(expiration_date)
   const diffTime = expiration.getTime() - today.getTime()
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 }
@@ -90,23 +90,22 @@ const handleCreateDomain = () => {
 </script>
 
 <template>
-  <div class="space-y-6">
-    <!-- Cabeçalho -->
-    <div class="flex justify-between items-center">
+  <div class="space-y-4 sm:space-y-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900">Meus Domínios</h1>
+        <h1 class="text-xl sm:text-2xl font-bold text-gray-900">Meus Domínios</h1>
         <p class="mt-1 text-sm text-gray-500">Gerencie todos os seus domínios em um só lugar</p>
       </div>
-      <div class="mt-4 flex md:mt-0 md:ml-4">
+      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
         <router-link
           :to="{ name: 'transfers-list' }"
-          class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          class="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
           Transferências
         </router-link>
         <button
           @click="handleCreateDomain"
-          class="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          class="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
           Novo Domínio
         </button>
@@ -116,7 +115,7 @@ const handleCreateDomain = () => {
     <!-- Filtros e Busca -->
     <div class="bg-white shadow rounded-lg">
       <div class="px-4 py-5 sm:p-6">
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <!-- Busca -->
           <div>
             <label for="search" class="block text-sm font-medium text-gray-700">Buscar</label>
@@ -216,44 +215,34 @@ const handleCreateDomain = () => {
             class="block hover:bg-gray-50"
           >
             <div class="px-4 py-4 sm:px-6">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
                   <p class="text-sm font-medium text-blue-600 truncate">{{ domain.name }}</p>
                   <span
                     :class="getStatusColor(domain.status)"
-                    class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                    class="inline-flex text-xs leading-5 font-semibold rounded-full px-2 py-1"
                   >
                     {{ getStatusText(domain.status) }}
                   </span>
                 </div>
-                <div class="ml-2 flex-shrink-0 flex">
-                  <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                <div class="flex-shrink-0">
+                  <p class="inline-flex text-xs leading-5 font-semibold rounded-full px-2 py-1"
                     :class="{
-                      'bg-red-100 text-red-800': getDaysUntilExpiration(domain.expirationDate) <= 30,
-                      'bg-yellow-100 text-yellow-800': getDaysUntilExpiration(domain.expirationDate) <= 60,
-                      'bg-green-100 text-green-800': getDaysUntilExpiration(domain.expirationDate) > 60
+                      'bg-red-100 text-red-800': getDaysUntilExpiration(domain.expiration_date) <= 30,
+                      'bg-yellow-100 text-yellow-800': getDaysUntilExpiration(domain.expiration_date) <= 60,
+                      'bg-green-100 text-green-800': getDaysUntilExpiration(domain.expiration_date) > 60
                     }"
                   >
-                    {{ getDaysUntilExpiration(domain.expirationDate) }} dias para expirar
+                    {{ getDaysUntilExpiration(domain.expiration_date) }} dias para expirar
                   </p>
                 </div>
               </div>
               <div class="mt-2 sm:flex sm:justify-between">
-                <div class="sm:flex">
-                  <p class="flex items-center text-sm text-gray-500">
-                    <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                    </svg>
-                    {{ domain.registrarId }}
-                  </p>
-                </div>
-                <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                <div class="flex items-center text-sm text-gray-500">
                   <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                   </svg>
-                  <p>
-                    Expira em {{ new Date(domain.expirationDate).toLocaleDateString() }}
-                  </p>
+                  {{ domain.registrar_id }}
                 </div>
               </div>
             </div>

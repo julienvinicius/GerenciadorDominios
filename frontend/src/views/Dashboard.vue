@@ -29,9 +29,9 @@ const getStatusText = (status: Domain['status']): string => {
   return texts[status]
 }
 
-const getDaysUntilExpiration = (expirationDate: string): number => {
+const getDaysUntilExpiration = (expiration_date: string): number => {
   const today = new Date()
-  const expiration = new Date(expirationDate)
+  const expiration = new Date(expiration_date)
   const diffTime = expiration.getTime() - today.getTime()
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 }
@@ -39,23 +39,27 @@ const getDaysUntilExpiration = (expirationDate: string): number => {
 const expiringDomains = computed(() => {
   return domainStore.domains
     .filter(domain => {
-      const daysUntilExpiration = getDaysUntilExpiration(domain.expirationDate)
+      const daysUntilExpiration = getDaysUntilExpiration(domain.expiration_date)
       return daysUntilExpiration <= 30 && daysUntilExpiration > 0
     })
-    .sort((a, b) => getDaysUntilExpiration(a.expirationDate) - getDaysUntilExpiration(b.expirationDate))
+    .sort((a, b) => getDaysUntilExpiration(a.expiration_date) - getDaysUntilExpiration(b.expiration_date))
+})
+
+const activeDomains = computed(() => {
+  return domainStore.domains.filter(domain => domain.status === 'active').length
 })
 </script>
 
 <template>
-  <div class="space-y-6">
+  <div class="space-y-4 sm:space-y-6">
     <!-- Cabeçalho -->
-    <div class="flex justify-between items-center">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900">Bem-vindo de volta!</h1>
+        <h1 class="text-xl sm:text-2xl font-bold text-gray-900">Bem-vindo de volta!</h1>
         <p class="mt-1 text-sm text-gray-500">Aqui está um resumo dos seus domínios</p>
       </div>
       <button
-        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        class="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         @click="$router.push('/domains/create')"
       >
         <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -66,9 +70,9 @@ const expiringDomains = computed(() => {
     </div>
 
     <!-- Cards de Resumo -->
-    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <div class="bg-white overflow-hidden shadow rounded-lg">
-        <div class="p-5">
+        <div class="p-4 sm:p-5">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <svg class="h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -79,7 +83,7 @@ const expiringDomains = computed(() => {
               <dl>
                 <dt class="text-sm font-medium text-gray-500 truncate">Total de Domínios</dt>
                 <dd class="flex items-baseline">
-                  <div class="text-2xl font-semibold text-gray-900">{{ domainStore.domains.length }}</div>
+                  <div class="text-xl sm:text-2xl font-semibold text-gray-900">{{ domainStore.domains.length }}</div>
                 </dd>
               </dl>
             </div>
@@ -88,7 +92,7 @@ const expiringDomains = computed(() => {
       </div>
 
       <div class="bg-white overflow-hidden shadow rounded-lg">
-        <div class="p-5">
+        <div class="p-4 sm:p-5">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <svg class="h-6 w-6 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -99,7 +103,7 @@ const expiringDomains = computed(() => {
               <dl>
                 <dt class="text-sm font-medium text-gray-500 truncate">Domínios Ativos</dt>
                 <dd class="flex items-baseline">
-                  <div class="text-2xl font-semibold text-gray-900">{{ domainStore.getActiveDomains }}</div>
+                  <div class="text-xl sm:text-2xl font-semibold text-gray-900">{{ activeDomains }}</div>
                 </dd>
               </dl>
             </div>
@@ -108,7 +112,7 @@ const expiringDomains = computed(() => {
       </div>
 
       <div class="bg-white overflow-hidden shadow rounded-lg">
-        <div class="p-5">
+        <div class="p-4 sm:p-5">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <svg class="h-6 w-6 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -119,7 +123,7 @@ const expiringDomains = computed(() => {
               <dl>
                 <dt class="text-sm font-medium text-gray-500 truncate">Próximos a Expirar</dt>
                 <dd class="flex items-baseline">
-                  <div class="text-2xl font-semibold text-gray-900">{{ expiringDomains.length }}</div>
+                  <div class="text-xl sm:text-2xl font-semibold text-gray-900">{{ expiringDomains.length }}</div>
                 </dd>
               </dl>
             </div>
@@ -128,7 +132,7 @@ const expiringDomains = computed(() => {
       </div>
 
       <div class="bg-white overflow-hidden shadow rounded-lg">
-        <div class="p-5">
+        <div class="p-4 sm:p-5">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <svg class="h-6 w-6 text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -139,7 +143,7 @@ const expiringDomains = computed(() => {
               <dl>
                 <dt class="text-sm font-medium text-gray-500 truncate">Domínios Expirados</dt>
                 <dd class="flex items-baseline">
-                  <div class="text-2xl font-semibold text-gray-900">
+                  <div class="text-xl sm:text-2xl font-semibold text-gray-900">
                     {{ domainStore.domains.filter(d => d.status === 'expired').length }}
                   </div>
                 </dd>
@@ -152,13 +156,13 @@ const expiringDomains = computed(() => {
 
     <!-- Lista de Domínios -->
     <div class="bg-white shadow rounded-lg">
-      <div class="px-4 py-5 sm:px-6">
-        <h2 class="text-lg font-medium text-gray-900">Últimos Domínios</h2>
+      <div class="px-4 py-4 sm:px-6 sm:py-5">
+        <h2 class="text-base sm:text-lg font-medium text-gray-900">Últimos Domínios</h2>
       </div>
       <div class="border-t border-gray-200">
         <ul role="list" class="divide-y divide-gray-200">
           <li v-for="domain in domainStore.domains.slice(0, 5)" :key="domain.id" class="px-4 py-4 sm:px-6">
-            <div class="flex items-center justify-between">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
               <div class="flex items-center">
                 <div class="flex-shrink-0">
                   <svg class="h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -170,12 +174,12 @@ const expiringDomains = computed(() => {
                   <p class="text-sm text-gray-500">{{ domain.registrar }}</p>
                 </div>
               </div>
-              <div class="flex items-center space-x-4">
+              <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
                 <span :class="['px-2 inline-flex text-xs leading-5 font-semibold rounded-full', getStatusColor(domain.status)]">
                   {{ getStatusText(domain.status) }}
                 </span>
                 <div class="text-sm text-gray-500">
-                  Expira em {{ getDaysUntilExpiration(domain.expirationDate) }} dias
+                  Expira em {{ getDaysUntilExpiration(domain.expiration_date) }} dias
                 </div>
                 <div class="flex space-x-2">
                   <button
@@ -198,7 +202,7 @@ const expiringDomains = computed(() => {
       </div>
       <div class="px-4 py-4 sm:px-6 border-t border-gray-200">
         <button
-          class="text-sm font-medium text-blue-600 hover:text-blue-500"
+          class="w-full sm:w-auto text-sm font-medium text-blue-600 hover:text-blue-500"
           @click="$router.push('/domains')"
         >
           Ver todos os domínios
@@ -208,13 +212,13 @@ const expiringDomains = computed(() => {
 
     <!-- Alertas de Expiração -->
     <div v-if="expiringDomains.length > 0" class="bg-white shadow rounded-lg">
-      <div class="px-4 py-5 sm:px-6">
-        <h2 class="text-lg font-medium text-gray-900">Alertas de Expiração</h2>
+      <div class="px-4 py-4 sm:px-6 sm:py-5">
+        <h2 class="text-base sm:text-lg font-medium text-gray-900">Alertas de Expiração</h2>
       </div>
       <div class="border-t border-gray-200">
         <ul role="list" class="divide-y divide-gray-200">
           <li v-for="domain in expiringDomains" :key="domain.id" class="px-4 py-4 sm:px-6">
-            <div class="flex items-center justify-between">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
               <div class="flex items-center">
                 <div class="flex-shrink-0">
                   <svg class="h-6 w-6 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -223,11 +227,11 @@ const expiringDomains = computed(() => {
                 </div>
                 <div class="ml-4">
                   <h3 class="text-sm font-medium text-gray-900">{{ domain.name }}</h3>
-                  <p class="text-sm text-gray-500">Expira em {{ getDaysUntilExpiration(domain.expirationDate) }} dias</p>
+                  <p class="text-sm text-gray-500">Expira em {{ getDaysUntilExpiration(domain.expiration_date) }} dias</p>
                 </div>
               </div>
               <button
-                class="text-sm font-medium text-blue-600 hover:text-blue-500"
+                class="w-full sm:w-auto text-sm font-medium text-blue-600 hover:text-blue-500"
                 @click="$router.push(`/domains/${domain.id}`)"
               >
                 Renovar

@@ -1,7 +1,7 @@
 <template>
-  <div class="p-6">
-    <div class="mb-6">
-      <h1 class="text-2xl font-bold text-gray-900">Configurações do Sistema</h1>
+  <div class="p-4 sm:p-6">
+    <div class="mb-4 sm:mb-6">
+      <h1 class="text-xl sm:text-2xl font-bold text-gray-900">Configurações do Sistema</h1>
       <p class="mt-1 text-sm text-gray-500">
         Gerencie as configurações do seu gerenciador de domínios
       </p>
@@ -9,7 +9,7 @@
 
     <div class="bg-white rounded-xl shadow-sm">
       <div class="border-b border-gray-200">
-        <nav class="flex space-x-8 px-6" aria-label="Tabs">
+        <nav class="flex overflow-x-auto px-4 sm:px-6" aria-label="Tabs">
           <button
             v-for="tab in tabs"
             :key="tab.id"
@@ -18,7 +18,7 @@
               currentTab === tab.id
                 ? 'border-blue-500 text-blue-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
-              'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'
+              'whitespace-nowrap py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-sm'
             ]"
           >
             {{ tab.name }}
@@ -26,15 +26,15 @@
         </nav>
       </div>
 
-      <div class="p-6">
+      <div class="p-4 sm:p-6">
         <!-- Configurações Gerais -->
-        <div v-if="currentTab === 'general'" class="space-y-6">
+        <div v-if="currentTab === 'general'" class="space-y-4 sm:space-y-6">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">TTL Padrão</label>
             <input
               type="number"
               v-model="generalSettings.defaultTTL"
-              class="input-field w-32"
+              class="input-field w-full sm:w-32"
               min="60"
               max="86400"
             />
@@ -71,10 +71,10 @@
         </div>
 
         <!-- Registradores DNS -->
-        <div v-if="currentTab === 'registrars'" class="space-y-6">
-          <div class="flex justify-between items-center">
+        <div v-if="currentTab === 'registrars'" class="space-y-4 sm:space-y-6">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0">
             <h3 class="text-lg font-medium text-gray-900">Registradores DNS</h3>
-            <button @click="showRegistrarForm = true" class="btn-primary">
+            <button @click="showRegistrarForm = true" class="btn-primary w-full sm:w-auto">
               Adicionar Registrador
             </button>
           </div>
@@ -85,12 +85,12 @@
               :key="registrar.id"
               class="bg-gray-50 rounded-lg p-4"
             >
-              <div class="flex justify-between items-start">
-                <div>
+              <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0">
+                <div class="w-full sm:w-auto">
                   <h4 class="text-sm font-medium text-gray-900">{{ registrar.name }}</h4>
-                  <p class="text-sm text-gray-500">{{ registrar.apiUrl }}</p>
+                  <p class="text-sm text-gray-500 break-all">{{ registrar.apiUrl }}</p>
                 </div>
-                <div class="flex items-center space-x-2">
+                <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
                   <button
                     @click="editRegistrar(registrar)"
                     class="text-blue-600 hover:text-blue-800"
