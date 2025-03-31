@@ -1,21 +1,24 @@
 const express = require('express');
 const router = express.Router();
+const domainRoutes = require('./domains');
+const registrarRoutes = require('./registrars');
+const logRoutes = require('./logs');
+const configRoutes = require('./configs');
+const alertRoutes = require('./alerts');
 
-const DomainController = require('../controllers/DomainController');
-const RegistrarController = require('../controllers/RegistrarController');
+// Rotas de domínios
+router.use('/domains', domainRoutes);
 
-// Rotas para Domínios
-router.get('/domains', DomainController.index);
-router.get('/domains/:id', DomainController.show);
-router.post('/domains', DomainController.store);
-router.put('/domains/:id', DomainController.update);
-router.delete('/domains/:id', DomainController.destroy);
+// Rotas de registradores
+router.use('/registrars', registrarRoutes);
 
-// Rotas para Registradores
-router.get('/registrars', RegistrarController.index);
-router.get('/registrars/:id', RegistrarController.show);
-router.post('/registrars', RegistrarController.store);
-router.put('/registrars/:id', RegistrarController.update);
-router.delete('/registrars/:id', RegistrarController.destroy);
+// Rotas de logs
+router.use('/logs', logRoutes);
+
+// Rotas de configurações
+router.use('/configs', configRoutes);
+
+// Rotas de alertas
+router.use('/alerts', alertRoutes);
 
 module.exports = router; 

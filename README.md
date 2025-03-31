@@ -1,77 +1,128 @@
 # Gerenciador de Domínios
 
-Sistema de gerenciamento de domínios desenvolvido com Vue.js 3 e Laravel.
+Sistema para gerenciamento de domínios e registradores, desenvolvido com Vue.js e Node.js.
 
-## Estrutura do Projeto
-
-```
-├── frontend/     # Aplicação Vue.js
-└── backend/      # API Laravel
-```
-
-## Requisitos
-
-- PHP >= 8.1
-- Composer
-- Node.js >= 16
-- NPM ou Yarn
-- MySQL/MariaDB
-
-## Funcionalidades
-
-- Gerenciamento de domínios (CRUD)
-- Monitoramento de status dos domínios
-- Gerenciamento de DNS
-- Notificações de expiração
-- Autenticação e autorização
-- Dashboard interativo
-
-## Configuração do Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-## Configuração do Backend
-
-```bash
-cd backend
-composer install
-cp .env.example .env
-php artisan key:generate
-php artisan migrate
-php artisan serve
-```
-
-## Tecnologias Utilizadas
+## 🚀 Tecnologias Utilizadas
 
 ### Frontend
 - Vue.js 3
-- Vue Router
-- Pinia
+- Vite
 - Tailwind CSS
 - Axios
-- TypeScript
+- Vue Router
+- Vuex (para gerenciamento de estado)
 
 ### Backend
-- Laravel 10
-- Laravel Sanctum
+- Node.js
+- Express
 - MySQL
-- Redis (cache)
+- JWT (para autenticação)
+- CORS
+- Dotenv (para variáveis de ambiente)
 
-## Convenções de Código
+## 📋 Pré-requisitos
 
-- Utilize TypeScript para todo código frontend
-- Siga as convenções PSR-12 para o código PHP
-- Commits devem seguir o padrão Conventional Commits
-- Documentação em português
+- Node.js (versão 14 ou superior)
+- MySQL (versão 5.7 ou superior)
+- npm ou yarn
 
-## Desenvolvimento
+## 🔧 Instalação
 
-1. Clone o repositório
-2. Configure o ambiente de desenvolvimento
-3. Siga as instruções de configuração para frontend e backend
-4. Crie uma branch para sua feature
-5. Envie um Pull Request 
+1. Clone o repositório:
+```bash
+git clone https://github.com/seu-usuario/gerenciador-dominios.git
+cd gerenciador-dominios
+```
+
+2. Instale as dependências do frontend:
+```bash
+cd frontend
+npm install
+```
+
+3. Instale as dependências do backend:
+```bash
+cd ../backend
+npm install
+```
+
+4. Configure as variáveis de ambiente:
+   - Crie um arquivo `.env` na pasta `backend` com as seguintes variáveis:
+   ```
+   DB_HOST=localhost
+   DB_USER=seu_usuario
+   DB_PASSWORD=sua_senha
+   DB_NAME=gerenciadordominios
+   PORT=8000
+   NODE_ENV=development
+   ```
+
+5. Configure o banco de dados:
+   - Crie um banco de dados MySQL chamado `gerenciadordominios`
+   - Execute o script SQL fornecido em `database/schema.sql`
+
+## 🚀 Executando o Projeto
+
+1. Inicie o servidor backend:
+```bash
+cd backend
+npm run dev
+```
+
+2. Em outro terminal, inicie o frontend:
+```bash
+cd frontend
+npm run dev
+```
+
+3. Acesse a aplicação em `http://localhost:5173`
+
+## 📁 Estrutura do Projeto
+
+```
+gerenciador-dominios/
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── views/
+│   │   ├── store/
+│   │   ├── router/
+│   │   └── App.vue
+│   └── package.json
+├── backend/
+│   ├── src/
+│   │   ├── controllers/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── config/
+│   │   ├── middlewares/
+│   │   └── utils/
+│   └── package.json
+└── README.md
+```
+
+## 🔒 Funcionalidades
+
+- Cadastro e gerenciamento de registradores
+- Cadastro e gerenciamento de domínios
+- Monitoramento de status dos domínios
+- Alertas de domínios próximos da expiração
+- Interface responsiva e moderna
+- Validação de dados em tempo real
+- Sistema de autenticação e autorização
+
+## 📝 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+## 👥 Contribuição
+
+1. Faça um Fork do projeto
+2. Crie uma Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a Branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## 📞 Suporte
+
+Para suporte, envie um email para seu-email@exemplo.com ou abra uma issue no repositório. 
