@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-    baseURL: '/api/v1',
+    baseURL: 'http://localhost:8000/api',
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -106,52 +106,30 @@ export const domainService = {
     // Domínios
     getDomains: () => api.get('/domains'),
     getDomain: (id: string) => api.get(`/domains/${id}`),
-    createDomain: (data: any) => {
-        domainService.clearCache('/domains')
-        return api.post('/domains', data)
-    },
-    updateDomain: (id: string, data: any) => {
-        domainService.clearCache('/domains')
-        return api.put(`/domains/${id}`, data)
-    },
-    deleteDomain: (id: string) => {
-        domainService.clearCache('/domains')
-        return api.delete(`/domains/${id}`)
-    },
-    checkDomainStatus: (id: string) => api.post(`/domains/${id}/check-status`),
+    createDomain: (data: any) => api.post('/domains', data),
+    updateDomain: (id: string, data: any) => api.put(`/domains/${id}`, data),
+    deleteDomain: (id: string) => api.delete(`/domains/${id}`),
     renewDomain: (id: string) => api.post(`/domains/${id}/renew`),
 
     // Registradores
     getRegistrars: () => api.get('/registrars'),
     getRegistrar: (id: string) => api.get(`/registrars/${id}`),
-    createRegistrar: (data: any) => {
-        domainService.clearCache('/registrars')
-        return api.post('/registrars', data)
-    },
-    updateRegistrar: (id: string, data: any) => {
-        domainService.clearCache('/registrars')
-        return api.put(`/registrars/${id}`, data)
-    },
-    deleteRegistrar: (id: string) => {
-        domainService.clearCache('/registrars')
-        return api.delete(`/registrars/${id}`)
-    },
-    testRegistrarConnection: (id: string) => api.post(`/registrars/${id}/test-connection`),
+    createRegistrar: (data: any) => api.post('/registrars', data),
+    updateRegistrar: (id: string, data: any) => api.put(`/registrars/${id}`, data),
+    deleteRegistrar: (id: string) => api.delete(`/registrars/${id}`),
 
-    // Registros DNS
-    getDnsRecords: (domainId: string) => api.get(`/domains/${domainId}/dns-records`),
-    createDnsRecord: (domainId: string, data: any) => {
-        domainService.clearCache(`/domains/${domainId}/dns-records`)
-        return api.post(`/domains/${domainId}/dns-records`, data)
-    },
-    updateDnsRecord: (domainId: string, recordId: string, data: any) => {
-        domainService.clearCache(`/domains/${domainId}/dns-records`)
-        return api.put(`/domains/${domainId}/dns-records/${recordId}`, data)
-    },
-    deleteDnsRecord: (domainId: string, recordId: string) => {
-        domainService.clearCache(`/domains/${domainId}/dns-records`)
-        return api.delete(`/domains/${domainId}/dns-records/${recordId}`)
-    },
+    // DNS Records
+    getDnsRecords: (domainId: string) => api.get(`/domains/${domainId}/dns`),
+    createDnsRecord: (domainId: string, data: any) => api.post(`/domains/${domainId}/dns`, data),
+    updateDnsRecord: (domainId: string, recordId: string, data: any) => api.put(`/domains/${domainId}/dns/${recordId}`, data),
+    deleteDnsRecord: (domainId: string, recordId: string) => api.delete(`/domains/${domainId}/dns/${recordId}`),
+
+    // Transferências
+    getTransfers: () => api.get('/transfers'),
+    getTransfer: (id: string) => api.get(`/transfers/${id}`),
+    createTransfer: (data: any) => api.post('/transfers', data),
+    updateTransfer: (id: string, data: any) => api.put(`/transfers/${id}`, data),
+    cancelTransfer: (id: string) => api.post(`/transfers/${id}/cancel`),
 
     // Certificados SSL
     getSslCertificates: (domainId: string) => api.get(`/domains/${domainId}/ssl-certificates`),
@@ -168,33 +146,6 @@ export const domainService = {
         return api.delete(`/domains/${domainId}/ssl-certificates/${certificateId}`)
     },
     renewSslCertificate: (domainId: string, certificateId: string) => api.post(`/domains/${domainId}/ssl-certificates/${certificateId}/renew`),
-
-    // Transferências
-    getTransfers: (domainId: string) => api.get(`/domains/${domainId}/transfers`),
-    getAllTransfers: () => api.get('/transfers'),
-    createTransfer: (domainId: string, data: any) => {
-        domainService.clearCache('/transfers')
-        domainService.clearCache(`/domains/${domainId}/transfers`)
-        return api.post(`/domains/${domainId}/transfers`, data)
-    },
-    updateTransfer: (domainId: string, transferId: string, data: any) => {
-        domainService.clearCache('/transfers')
-        domainService.clearCache(`/domains/${domainId}/transfers`)
-        return api.put(`/domains/${domainId}/transfers/${transferId}`, data)
-    },
-    deleteTransfer: (domainId: string, transferId: string) => {
-        domainService.clearCache('/transfers')
-        domainService.clearCache(`/domains/${domainId}/transfers`)
-        return api.delete(`/domains/${domainId}/transfers/${transferId}`)
-    },
-    getTransferStatus: (domainId: string, transferId: string) => api.get(`/domains/${domainId}/transfers/${transferId}/status`),
-    cancelTransfer: (domainId: string, transferId: string) => {
-        domainService.clearCache('/transfers')
-        domainService.clearCache(`/domains/${domainId}/transfers`)
-        return api.post(`/domains/${domainId}/transfers/${transferId}/cancel`)
-    },
-    resendTransferEmail: (domainId: string, transferId: string) => api.post(`/domains/${domainId}/transfers/${transferId}/resend-email`),
-    getTransferCost: (domainId: string, registrarId: string) => api.get(`/domains/${domainId}/transfer-cost/${registrarId}`),
 
     // Segurança
     getSecuritySettings: () => api.get('/security/settings'),
