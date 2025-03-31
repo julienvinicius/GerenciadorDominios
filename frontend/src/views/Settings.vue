@@ -359,7 +359,7 @@ import DnsTemplateForm from '@/components/templates/DnsTemplateForm.vue'
 import IntegrationForm from '@/components/integrations/IntegrationForm.vue'
 import MonitoringSettings from '@/components/monitoring/MonitoringSettings.vue'
 import SecuritySettings from '@/components/security/SecuritySettings.vue'
-import LogViewer from '@/components/logs/LogViewer.vue'
+import LogViewer from '../components/logs/LogViewer.vue'
 
 const tabs = [
   { id: 'general', name: 'Geral' },
