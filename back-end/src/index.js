@@ -6,7 +6,11 @@ const routes = require('./routes');
 const app = express();
 
 // Middleware para CORS
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // Middleware para parsing de JSON
 app.use(express.json());
@@ -16,12 +20,27 @@ app.get('/', (req, res) => {
     res.json({ 
         message: 'API do Gerenciador de Domínios está funcionando!',
         status: 'online',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        routes: {
+            domains: '/api/domains',
+            registrars: '/api/registrars',
+            logs: '/api/logs',
+            configs: '/api/configs',
+            alerts: '/api/alerts'
+        }
     });
 });
 
 // Rotas da API
 app.use('/api', routes);
+
+// Middleware para rotas não encontradas
+app.use((req, res) => {
+    res.status(404).json({
+        error: 'Rota não encontrada',
+        path: req.originalUrl
+    });
+});
 
 // Middleware de tratamento de erros
 app.use((err, req, res, next) => {
