@@ -6,7 +6,7 @@
         <p class="mt-1 text-sm text-gray-500">Refine sua busca por domínios</p>
       </div>
       <button
-        @click="$emit('create-domain')"
+        @click="showModal = true"
         class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
       >
         <svg class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -68,22 +68,37 @@
         </select>
       </div>
     </div>
+
+    <!-- Modal de Adicionar Domínio -->
+    <AddDomainModal
+      v-model="showModal"
+      :registrars="registrars"
+      @submit="handleAddDomain"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import type { Registrar } from '@/types/registrar'
+import AddDomainModal from './AddDomainModal.vue'
 
-defineProps<{
+const props = defineProps<{
   registrars: Registrar[]
   selectedStatus: string
   selectedRegistrar: string
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'search', term: string): void
   (e: 'status-change', status: string): void
   (e: 'registrar-change', registrarId: string): void
-  (e: 'create-domain'): void
+  (e: 'create-domain', data: any): void
 }>()
+
+const showModal = ref(false)
+
+const handleAddDomain = async (data: any) => {
+  await emit('create-domain', data)
+}
 </script> 

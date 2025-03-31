@@ -17,7 +17,6 @@
       @domain-click="handleDomainClick"
       @view-details="handleDomainClick"
       @renew-domain="handleRenewDomain"
-      @create-domain="handleCreateDomain"
     />
   </div>
 </template>
@@ -99,14 +98,24 @@ const handleDomainClick = (domainId: string) => {
   router.push(`/domains/${domainId}`)
 }
 
-const handleCreateDomain = () => {
-  router.push('/domains/create')
+const handleCreateDomain = async (data: any) => {
+  try {
+    isLoading.value = true
+    error.value = null
+    await domainStore.createDomain(data)
+    await loadData()
+  } catch (err) {
+    error.value = 'Erro ao criar domínio. Por favor, tente novamente.'
+    console.error('Erro ao criar domínio:', err)
+    throw err
+  } finally {
+    isLoading.value = false
+  }
 }
 
 const handleRenewDomain = async (domainId: string) => {
   try {
     await domainStore.renewDomain(domainId)
-    // Recarregar dados após renovação
     await loadData()
   } catch (err) {
     console.error('Erro ao renovar domínio:', err)
