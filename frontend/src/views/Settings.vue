@@ -314,7 +314,12 @@
 
         <!-- Logs -->
         <div v-if="currentTab === 'logs'">
-          <LogViewer @save="saveLogSettings" />
+          <div class="p-6">
+            <h3 class="text-lg font-medium text-gray-900">Logs do Sistema</h3>
+            <p class="mt-1 text-sm text-gray-500">
+              Em breve: visualização de logs do sistema
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -359,7 +364,6 @@ import DnsTemplateForm from '@/components/templates/DnsTemplateForm.vue'
 import IntegrationForm from '@/components/integrations/IntegrationForm.vue'
 import MonitoringSettings from '@/components/monitoring/MonitoringSettings.vue'
 import SecuritySettings from '@/components/security/SecuritySettings.vue'
-import LogViewer from '../components/logs/LogViewer.vue'
 
 const tabs = [
   { id: 'general', name: 'Geral' },
