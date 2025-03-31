@@ -59,7 +59,7 @@ npm install
 
 5. Configure o banco de dados:
    - Crie um banco de dados MySQL chamado `gerenciadordominios`
-   - Execute o script SQL fornecido em `database/schema.sql`
+   - Execute o script SQL fornecido em `backupSql.sql`
 
 ## 🚀 Executando o Projeto
 
