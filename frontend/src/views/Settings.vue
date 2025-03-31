@@ -311,16 +311,6 @@
         <div v-if="currentTab === 'security'">
           <SecuritySettings @save="saveSecuritySettings" />
         </div>
-
-        <!-- Logs -->
-        <div v-if="currentTab === 'logs'">
-          <div class="p-6">
-            <h3 class="text-lg font-medium text-gray-900">Logs do Sistema</h3>
-            <p class="mt-1 text-sm text-gray-500">
-              Em breve: visualização de logs do sistema
-            </p>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -372,8 +362,7 @@ const tabs = [
   { id: 'integrations', name: 'Integrações' },
   { id: 'monitoring', name: 'Monitoramento' },
   { id: 'backup', name: 'Backup' },
-  { id: 'security', name: 'Segurança' },
-  { id: 'logs', name: 'Logs' }
+  { id: 'security', name: 'Segurança' }
 ]
 
 const currentTab = ref('general')
@@ -535,10 +524,6 @@ const saveMonitoringSettings = (settings: any) => {
 
 const saveSecuritySettings = (settings: any) => {
   console.log('Salvando configurações de segurança:', settings)
-}
-
-const saveLogSettings = (settings: any) => {
-  console.log('Salvando configurações de logs:', settings)
 }
 
 const createBackup = () => {
