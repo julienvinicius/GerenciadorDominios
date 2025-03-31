@@ -61,11 +61,11 @@ class RegistrarController {
                 });
             }
 
-            // Inserir o registrador
+            // Inserir o registrador com valores padrão para os campos obrigatórios
             console.log('Inserindo registrador no banco...');
             const [result] = await pool.query(
-                'INSERT INTO registrars (name) VALUES (?)',
-                [name]
+                'INSERT INTO registrars (name, api_url, api_key, api_secret) VALUES (?, ?, ?, ?)',
+                [name, 'https://api.example.com', 'default_key', 'default_secret']
             );
 
             // Buscar o registrador recém-criado

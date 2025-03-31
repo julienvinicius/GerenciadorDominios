@@ -65,11 +65,15 @@ class DomainController {
     // Criar um novo domínio
     async store(req, res) {
         try {
-            const { name, registrar_id, expiry_date } = req.body;
-            console.log('Dados recebidos para criar domínio:', { name, registrar_id, expiry_date });
+            const { name, registrar_id, expiration_date } = req.body;
+            console.log('Dados recebidos para criar domínio:', { name, registrar_id, expiration_date });
 
             // Validar dados
-            const errors = validateDomainData(req.body);
+            const errors = validateDomainData({
+                name,
+                registrar_id,
+                expiry_date: expiration_date
+            });
             if (errors.length > 0) {
                 console.error('Erros de validação:', errors);
                 return res.status(400).json({ error: 'Dados inválidos', details: errors });
@@ -103,11 +107,26 @@ class DomainController {
                 });
             }
 
+            // Determinar o status com base na data de expiração
+            const expiryDate = new Date(expiration_date);
+            const today = new Date();
+            const thirtyDaysFromNow = new Date();
+            thirtyDaysFromNow.setDate(today.getDate() + 30);
+
+            let status;
+            if (expiryDate < today) {
+                status = 'inactive';
+            } else if (expiryDate <= thirtyDaysFromNow) {
+                status = 'pending';
+            } else {
+                status = 'active';
+            }
+
             // Inserir o domínio
             console.log('Inserindo domínio no banco...');
             const [result] = await pool.query(
-                'INSERT INTO domains (name, registrar_id, expiration_date) VALUES (?, ?, ?)',
-                [name, registrar_id, expiry_date]
+                'INSERT INTO domains (name, registrar_id, expiration_date, status) VALUES (?, ?, ?, ?)',
+                [name, registrar_id, expiration_date, status]
             );
 
             // Buscar o domínio recém-criado
@@ -119,11 +138,7 @@ class DomainController {
                     d.expiration_date,
                     d.notes,
                     r.name as registrar_name,
-                    CASE
-                        WHEN d.expiration_date < CURDATE() THEN 'expirado'
-                        WHEN d.expiration_date <= DATE_ADD(CURDATE(), INTERVAL 30 DAY) THEN 'expirando'
-                        ELSE 'ativo'
-                    END as status
+                    d.status
                 FROM domains d 
                 LEFT JOIN registrars r ON d.registrar_id = r.id 
                 WHERE d.id = ?

@@ -38,10 +38,17 @@
                     type="text"
                     id="domain-name"
                     v-model="form.name"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    @input="validateDomain"
+                    :class="[
+                      'mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm',
+                      domainError ? 'border-red-300' : 'border-gray-300'
+                    ]"
                     placeholder="exemplo.com.br"
                     required
                   >
+                  <p v-if="domainError" class="mt-1 text-sm text-red-600">
+                    {{ domainError }}
+                  </p>
                 </div>
 
                 <!-- Registrador -->
@@ -66,7 +73,7 @@
                   <input
                     type="date"
                     id="expiry-date"
-                    v-model="form.expiry_date"
+                    v-model="form.expiration_date"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                     required
                   >
@@ -118,20 +125,48 @@ const emit = defineEmits<{
 }>()
 
 const isLoading = ref(false)
+const domainError = ref('')
+
 const form = ref({
   name: '',
   registrar_id: '',
-  expiry_date: ''
+  expiration_date: ''
 })
+
+const validateDomain = () => {
+  const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9](\.[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])*\.[a-zA-Z]{2,}$/
+  
+  if (!form.value.name) {
+    domainError.value = ''
+    return
+  }
+
+  if (form.value.name.includes('@')) {
+    domainError.value = 'O nome do domínio não deve conter @'
+    return
+  }
+
+  if (!domainRegex.test(form.value.name)) {
+    domainError.value = 'Formato inválido. Use: exemplo.com.br ou sub.exemplo.com'
+    return
+  }
+
+  domainError.value = ''
+}
 
 const handleSubmit = async () => {
   try {
+    validateDomain()
+    if (domainError.value) {
+      return
+    }
+
     isLoading.value = true
     await emit('submit', form.value)
     form.value = {
       name: '',
       registrar_id: '',
-      expiry_date: ''
+      expiration_date: ''
     }
     emit('update:modelValue', false)
   } catch (error) {
