@@ -18,7 +18,7 @@
               currentTab === tab.id
                 ? 'border-blue-500 text-blue-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
-              'whitespace-nowrap py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-sm'
+              'whitespace-nowrap py-3 sm:py-4 px-4 sm:px-6 mx-1 sm:mx-2 border-b-2 font-medium text-sm'
             ]"
           >
             {{ tab.name }}
@@ -112,6 +112,56 @@
             </div>
           </div>
         </div>
+
+        <!-- Templates -->
+        <div v-if="currentTab === 'templates'" class="space-y-4 sm:space-y-6">
+          <div class="bg-white p-4 rounded-lg border border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Templates</h3>
+            <p class="text-sm text-gray-500">
+              Esta funcionalidade estará disponível em breve. Os templates permitirão criar configurações pré-definidas para seus domínios.
+            </p>
+          </div>
+        </div>
+
+        <!-- Integrações -->
+        <div v-if="currentTab === 'integrations'" class="space-y-4 sm:space-y-6">
+          <div class="bg-white p-4 rounded-lg border border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Integrações</h3>
+            <p class="text-sm text-gray-500">
+              Esta funcionalidade estará disponível em breve. Integrações com outros serviços e APIs serão configuradas aqui.
+            </p>
+          </div>
+        </div>
+
+        <!-- Monitoramento -->
+        <div v-if="currentTab === 'monitoring'" class="space-y-4 sm:space-y-6">
+          <div class="bg-white p-4 rounded-lg border border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Monitoramento</h3>
+            <p class="text-sm text-gray-500">
+              Esta funcionalidade estará disponível em breve. Configure alertas e monitoramento para seus domínios.
+            </p>
+          </div>
+        </div>
+
+        <!-- Backup -->
+        <div v-if="currentTab === 'backup'" class="space-y-4 sm:space-y-6">
+          <div class="bg-white p-4 rounded-lg border border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Backup</h3>
+            <p class="text-sm text-gray-500">
+              Esta funcionalidade estará disponível em breve. Configure backups automáticos de suas configurações.
+            </p>
+          </div>
+        </div>
+
+        <!-- Segurança -->
+        <div v-if="currentTab === 'security'" class="space-y-4 sm:space-y-6">
+          <div class="bg-white p-4 rounded-lg border border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Segurança</h3>
+            <p class="text-sm text-gray-500">
+              Esta funcionalidade estará disponível em breve. Configure opções de segurança para seus domínios.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -131,7 +181,12 @@ import RegistrarForm from '@/components/registrars/RegistrarForm.vue'
 
 const tabs = [
   { id: 'general', name: 'Geral' },
-  { id: 'registrars', name: 'Registradores' }
+  { id: 'registrars', name: 'Registradores' },
+  { id: 'templates', name: 'Templates' },
+  { id: 'integrations', name: 'Integrações' },
+  { id: 'monitoring', name: 'Monitoramento' },
+  { id: 'backup', name: 'Backup' },
+  { id: 'security', name: 'Segurança' }
 ]
 
 const currentTab = ref('general')
